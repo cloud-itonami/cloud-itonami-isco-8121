@@ -44,6 +44,34 @@ Resolves via [`kotoba-lang/occupation`](https://github.com/kotoba-lang/occupatio
 See [`docs/business-model.md`](docs/business-model.md) and
 [`docs/operator-guide.md`](docs/operator-guide.md).
 
+## Reference implementation
+
+`src/metal_plant/{store,governor}.cljc` is a minimal but real
+implementation of the Core Contract above (pure cljc, no external deps):
+
+- `metal-plant.store` — `Store` protocol + `MemStore`: furnaces, batches,
+  temperature readings, quality samples. A reading/sample can only be
+  recorded against a registered batch on a registered furnace (batch
+  provenance).
+- `metal-plant.governor` — `MetalPlantGovernor`: `assess` gates a
+  proposal against the batch/furnace env. Hard invariants force `:hold`
+  (no batch, direct-write instead of `:propose`, or a temp-reading
+  exceeding the furnace's `max-safe-temp-c` at below `:high`
+  safety-class); an overtemp reading always requires `:high`+
+  safety-class and thus `:human-approval` — it can never be
+  auto-approved, only recorded and escalated; low-confidence proposals
+  also escalate.
+
+```bash
+clojure -M:test   # 7 tests, 13 assertions, green
+```
+
+This is what backs this repo's `:maturity :implemented` entry in
+[`kotoba-lang/occupation`](https://github.com/kotoba-lang/occupation) —
+the 13th `cloud-itonami-isco-*` occupation to reach that tier, after
+`cloud-itonami-isco-6112`, `-2221`, `-7126`, `-4321`, `-9312`, `-5322`,
+`-8332`, `-1321`, `-3253`, `-6210`, `-5223` and `-7231` (ADR-2607012000).
+
 ## License
 
 AGPL-3.0-or-later.
