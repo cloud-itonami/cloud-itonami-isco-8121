@@ -1,0 +1,10 @@
+{:itonami.blueprint/id "cloud-itonami-isco-8121"
+ :itonami.blueprint/name "Independent Metal Processing Plant Operations"
+ :itonami.blueprint/isco-08 "8121"
+ :itonami.blueprint/domain :manufacturing/metal-processing
+ :itonami.blueprint/license "AGPL-3.0-or-later"
+ :itonami.blueprint/social-impact [:local-jobs :worker-safety :material-quality]
+ :itonami.blueprint/governor :metal-plant-governor
+ :itonami.blueprint/robotics true
+ :itonami.blueprint/required-technologies [:robotics :telemetry :dmn :bpmn :audit-ledger]
+ :itonami.blueprint/status :public-oss}
