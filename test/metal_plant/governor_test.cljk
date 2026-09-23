@@ -1,5 +1,5 @@
 (ns metal-plant.governor-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [metal-plant.store :as store]
             [metal-plant.governor :as governor]))
 
