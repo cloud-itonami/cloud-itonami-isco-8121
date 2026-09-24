@@ -1,0 +1,34 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a furnace/rolling-mill monitoring robot performs
+;; temperature sensing and sample collection near hot processes. Its physical
+;; work: it dwells in front of a furnace behind a ceramic-fibre heat shield that
+;; protects its electronics, and it carries collected samples to the lab.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-8121"
+ :cases
+ [{:id :heat-shield-at-furnace
+   :kind :thermal
+   :procedure "robot dwells 10 min in front of a furnace door taking readings, then retreats; the inner face of its ceramic-fibre shield is watched through the cool-down"
+   :params {:conductivity-w-mk 0.10 :density-kg-m3 300.0 :specific-heat-j-kgk 1000.0
+            :t0-c 40.0 :t-hot-c 900.0 :h-front-w-m2k 40.0 :t-back-ambient-c 40.0 :h-back-w-m2k 10.0
+            :heating-s 600.0 :t-cool-c 40.0 :threshold-c 70.0 :duration-s 7200.0 :nodes 21}
+   :sweep {:param :thickness-m :values [0.02 0.03 0.05 0.075 0.10]}
+   :quantity :peak-back-c
+   :limit {:max 70.0 :basis "estimate: 70 °C upper operating temperature of commercial-grade electronics behind the shield"}
+   :boundary {:lo 0.01 :hi 0.15}}
+  {:id :sample-to-lab
+   :kind :transport
+   :procedure "robot carries a collected metal sample in its shielded box from the mill floor to the laboratory"
+   :params {:mass-kg 150.0 :distance-m 120.0 :v-max-mps 1.5 :a-max-mps2 0.5
+            :brake-decel-mps2 1.0 :drive-force-n 250.0 :crr 0.03
+            :cog-height-m 0.50 :support-half-length-m 0.35 :payload-kg 10.0
+            :max-time-s 1200.0}
+   :sweep {:param :v-max-mps :values [0.5 0.8 1.0 1.5 2.0]}
+   :quantity :cycle-time-s
+   :limit {:max 150.0 :basis "estimate: sample must reach the lab within 2.5 min for the melt's chemistry turnaround"}
+   :boundary {:lo 0.3 :hi 3.0}}]}
